@@ -226,7 +226,9 @@
 
     // options could contain limit, duration and mode
     // taking more than one video (limit) is only supported if provide own controls via cameraOverlayView property
-    NSNumber* duration = [options objectForKey:@"duration"];
+    NSNumber* duration  = [options objectForKey:@"duration"];
+    BOOL highquality    = [[options objectForKey:@"highquality"] boolValue];
+    BOOL frontcamera    = [[options objectForKey:@"frontcamera"] boolValue];
     NSString* mediaType = nil;
 
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -262,15 +264,17 @@
             if (duration) {
                 pickerController.videoMaximumDuration = [duration doubleValue];
             }
-            //NSLog(@"pickerController.videoMaximumDuration = %f", pickerController.videoMaximumDuration);
         }
 
         // iOS 4.0
         if ([pickerController respondsToSelector:@selector(cameraCaptureMode)]) {
             pickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModeVideo;
-            // pickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
-            // pickerController.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-            // pickerController.cameraFlashMode = UIImagePickerControllerCameraFlashModeAuto;
+            if (highquality) {
+                pickerController.videoQuality = UIImagePickerControllerQualityTypeHigh;
+            }
+            if (frontcamera) {
+                pickerController.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+            }
         }
         // CDVImagePicker specific property
         pickerController.callbackId = callbackId;
