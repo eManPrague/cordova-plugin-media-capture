@@ -229,6 +229,7 @@
     NSNumber* duration  = [options objectForKey:@"duration"];
     BOOL highquality    = [[options objectForKey:@"highquality"] boolValue];
     BOOL frontcamera    = [[options objectForKey:@"frontcamera"] boolValue];
+    BOOL preferformatvideo = [[options objectForKey:@"preferformatvideo"] boolValue];
     NSString* mediaType = nil;
 
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
@@ -240,10 +241,21 @@
             types = [UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
             // NSLog(@"MediaTypes: %@", [types description]);
 
-            if ([types containsObject:(NSString*)kUTTypeMovie]) {
-                mediaType = (NSString*)kUTTypeMovie;
-            } else if ([types containsObject:(NSString*)kUTTypeVideo]) {
-                mediaType = (NSString*)kUTTypeVideo;
+            if (preferformatvideo)
+            {
+                if ([types containsObject:(NSString*)kUTTypeVideo]) {
+                    mediaType = (NSString*)kUTTypeVideo;
+                } else if ([types containsObject:(NSString*)kUTTypeMovie]) {
+                    mediaType = (NSString*)kUTTypeMovie;
+                }
+            }
+            else
+            {
+                if ([types containsObject:(NSString*)kUTTypeMovie]) {
+                    mediaType = (NSString*)kUTTypeMovie;
+                } else if ([types containsObject:(NSString*)kUTTypeVideo]) {
+                    mediaType = (NSString*)kUTTypeVideo;
+                }
             }
         }
     }
